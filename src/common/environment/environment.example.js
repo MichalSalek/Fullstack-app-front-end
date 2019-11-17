@@ -1,10 +1,8 @@
-// Copy this file as environment.js and replace "your-environment" part to correct one
-
 const prod = {
-    apiUrl: 'your-environment',
+    apiUrl: '',
 };
 const dev = {
-    apiUrl: 'your-environment',
+    apiUrl: 'http://localhost:4100',
 };
 
 export const env = process.env.NODE_ENV === 'development' ? dev : prod;
