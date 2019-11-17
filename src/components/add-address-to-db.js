@@ -1,6 +1,5 @@
 import React, {useState} from 'react';
 import io from 'socket.io-client';
-// import {env} from "../common/environment/environment";
 import service$ from '../common/services/http.service';
 import {SnackbarWrapper} from "./snackbar-wrapper";
 
@@ -14,7 +13,7 @@ import Button from "@material-ui/core/Button";
 import SaveIcon from '@material-ui/icons/Save';
 import {makeStyles} from "@material-ui/core";
 
-const socket = io('http://localhost:4100',  {transports: ['websocket']});
+const socket = io('http://localhost:4100', {transports: ['websocket']});
 
 const useStyles = makeStyles(theme => ({
     root: {
@@ -49,11 +48,10 @@ export const AddAddressToDB = () => {
                 setSendCounter(sendCounter + 1);
                 setAddress("");
                 setOpenSnackbar(true);
-                socket.on('connect', function(){console.log("SOCKET CONNECTED")});
-                socket.emit('status added');
-                socket.on('refresh feed', function (msg) {
-                    console.dir(msg);
+                socket.on('connect', () => {
+                    console.log("Websocket connected.")
                 });
+                socket.emit('address added');
             }
         })
     };
