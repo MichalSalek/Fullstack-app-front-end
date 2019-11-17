@@ -9,8 +9,8 @@ import Fab from '@material-ui/core/Fab';
 import KeyboardArrowUpIcon from '@material-ui/icons/KeyboardArrowUp';
 import Box from "@material-ui/core/Box";
 
-export const AddAddressToDB = () => {
+export const FetchAdressesFromDB = () => {
     return (<React.Fragment>
-        <Paper><Box px={1} py={3}> sdf </Box></Paper>
+        <Paper><Box px={1} py={3}> fetching... </Box></Paper>
     </React.Fragment>)
 };
