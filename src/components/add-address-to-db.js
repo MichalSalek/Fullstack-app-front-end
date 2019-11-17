@@ -1,5 +1,6 @@
-import React, {useEffect, useState} from 'react';
-
+import React, {useState} from 'react';
+import io from 'socket.io-client';
+// import {env} from "../common/environment/environment";
 import service$ from '../common/services/http.service';
 import {SnackbarWrapper} from "./snackbar-wrapper";
 
@@ -12,6 +13,8 @@ import TextField from "@material-ui/core/TextField";
 import Button from "@material-ui/core/Button";
 import SaveIcon from '@material-ui/icons/Save';
 import {makeStyles} from "@material-ui/core";
+
+const socket = io('http://localhost:4100',  {transports: ['websocket']});
 
 const useStyles = makeStyles(theme => ({
     root: {
@@ -30,13 +33,27 @@ export const AddAddressToDB = () => {
     const [sendCounter, setSendCounter] = useState(0);
     const [inputError, setInputError] = useState(false);
 
+    const fallDownErrorInfo = () => {
+        setTimeout(() => {
+            setInputError(false);
+        }, 1000);
+    };
+
     const sendAddressToDB = () => {
-        if (!address) return setInputError(true);
+        if (!address) {
+            setInputError(true);
+            return fallDownErrorInfo();
+        }
         service$.sendAddress(address).then((response) => {
             if (response.status === 200) {
                 setSendCounter(sendCounter + 1);
                 setAddress("");
                 setOpenSnackbar(true);
+                socket.on('connect', function(){console.log("SOCKET CONNECTED")});
+                socket.emit('status added');
+                socket.on('refresh feed', function (msg) {
+                    console.dir(msg);
+                });
             }
         })
     };
@@ -44,11 +61,8 @@ export const AddAddressToDB = () => {
     const inputChangeHandler = (e) => {
         setInputError(!e.currentTarget.value);
         setAddress(e.currentTarget.value);
-
+        fallDownErrorInfo();
     };
-
-    useEffect(() => {
-    }, [inputError]);
 
     return (<React.Fragment>
         <Paper><Box px={2} py={3}>
