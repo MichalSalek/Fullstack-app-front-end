@@ -47,7 +47,8 @@ export const AddAddressToDB = () => {
 
     };
 
-    useEffect(()=>{},[inputError]);
+    useEffect(() => {
+    }, [inputError]);
 
     return (<React.Fragment>
         <Paper><Box px={2} py={3}>
@@ -57,6 +58,7 @@ export const AddAddressToDB = () => {
                 <TextField className={classes.leftSpacing} id="add-address" label="Add new bitcoin address here"
                            fullWidth
                            onChange={inputChangeHandler}
+                           onKeyDown={(e) => e.key === 'Enter' && sendAddressToDB()}
                            value={address}
                            error={inputError}/>
                 <Button
