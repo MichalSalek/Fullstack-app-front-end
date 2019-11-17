@@ -5,9 +5,14 @@ import {env} from '../environment/environment'
 
 export class HttpService {
 
+    config = {
+        headers: {'Access-Control-Allow-Origin': 'Origin, X-Requested-With, Content-Type, Accept'}
+    };
+
     getAddresses() {
         return axios(env.apiUrl + "/addresses", {
             method: 'GET',
+            ...this.config
         })
     }
 
@@ -16,7 +21,8 @@ export class HttpService {
             method: 'GET',
             params: {
                 address
-            }
+            },
+            ...this.config
         })
     }
 
