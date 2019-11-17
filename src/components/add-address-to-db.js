@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 
 import service$ from '../common/services/http.service';
 import {SnackbarWrapper} from "./snackbar-wrapper";
@@ -26,19 +26,28 @@ const useStyles = makeStyles(theme => ({
 export const AddAddressToDB = () => {
     const classes = useStyles();
     const [address, setAddress] = useState("");
-    const [openSnackbar, setOpenSnackbar] = React.useState(false);
-    const [sendCounter, setSendCounter] = React.useState(0);
+    const [openSnackbar, setOpenSnackbar] = useState(false);
+    const [sendCounter, setSendCounter] = useState(0);
+    const [inputError, setInputError] = useState(false);
 
     const sendAddressToDB = () => {
+        if (!address) return setInputError(true);
         service$.sendAddress(address).then((response) => {
             if (response.status === 200) {
                 setSendCounter(sendCounter + 1);
                 setAddress("");
                 setOpenSnackbar(true);
-
             }
         })
     };
+
+    const inputChangeHandler = (e) => {
+        setInputError(!e.currentTarget.value);
+        setAddress(e.currentTarget.value);
+
+    };
+
+    useEffect(()=>{},[inputError]);
 
     return (<React.Fragment>
         <Paper><Box px={2} py={3}>
@@ -47,8 +56,9 @@ export const AddAddressToDB = () => {
                 <MonetizationOnOutlinedIcon/>
                 <TextField className={classes.leftSpacing} id="add-address" label="Add new bitcoin address here"
                            fullWidth
-                           onChange={(e) => setAddress(e.currentTarget.value)}
-                           value={address}/>
+                           onChange={inputChangeHandler}
+                           value={address}
+                           error={inputError}/>
                 <Button
                     className={classes.leftSpacing}
                     variant="outlined"
@@ -67,6 +77,6 @@ export const AddAddressToDB = () => {
             message={`The new address (${sendCounter}) added successfully!`}
             isItOpen={openSnackbar}
             setIsItOpen={setOpenSnackbar}
-        />;
+        />
     </React.Fragment>)
 };
