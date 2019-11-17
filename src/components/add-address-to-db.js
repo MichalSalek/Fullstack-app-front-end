@@ -1,7 +1,9 @@
 import React, {useState} from 'react';
 import io from 'socket.io-client';
+
 import service$ from '../common/services/http.service';
 import {SnackbarWrapper} from "./snackbar-wrapper";
+import {env} from "../common/environment/environment";
 
 // Material
 import Paper from "@material-ui/core/Paper";
@@ -13,7 +15,8 @@ import Button from "@material-ui/core/Button";
 import SaveIcon from '@material-ui/icons/Save';
 import {makeStyles} from "@material-ui/core";
 
-const socket = io('http://localhost:4100', {transports: ['websocket']});
+
+const socket = io(env.apiUrl, {transports: ['websocket']});
 
 const useStyles = makeStyles(theme => ({
     root: {
