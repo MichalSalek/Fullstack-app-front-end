@@ -4,6 +4,7 @@ import io from 'socket.io-client';
 import service$ from '../common/services/http.service';
 import {SnackbarWrapper} from "./snackbar-wrapper";
 import {env} from "../common/environment/environment";
+import {GetNewBlocksFromAPI} from "./get-new-blocks-from-api";
 
 // Material
 import Paper from "@material-ui/core/Paper";
@@ -67,7 +68,7 @@ export const AddAddressToDB = () => {
 
     return (<React.Fragment>
         <Paper><Box px={2} py={3}>
-            <Typography variant={"h5"} component={"h3"} color={"textPrimary"} align={"center"}>Add new
+            <Typography variant={"h6"} color={"textSecondary"} align={"center"}>Add new
                 address</Typography>
             <article className={classes.root}>
                 <MonetizationOnOutlinedIcon/>
@@ -88,6 +89,7 @@ export const AddAddressToDB = () => {
                     Save
                 </Button>
             </article>
+            <GetNewBlocksFromAPI setAddress={setAddress} />
         </Box></Paper>
         <SnackbarWrapper
             variant="success"

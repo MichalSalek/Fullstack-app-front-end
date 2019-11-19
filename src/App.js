@@ -22,7 +22,7 @@ const App = () => {
             <Container>
                 <MainTitle content={"Wallet app"}/>
                 <Box mt={5}>
-                <Grid container spacing={6} m={6}>
+                <Grid container spacing={6} m={6} alignItems="stretch">
                     <Grid item xs={12} lg={6}>
                         <AddAddressToDB />
                     </Grid>

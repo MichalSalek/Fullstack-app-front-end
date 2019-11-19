@@ -16,6 +16,7 @@ import {makeStyles} from "@material-ui/core";
 import Button from "@material-ui/core/Button";
 import ButtonGroup from "@material-ui/core/ButtonGroup";
 import LinearProgress from "@material-ui/core/LinearProgress";
+import Typography from "@material-ui/core/Typography";
 
 const socket = io(env.apiUrl, {transports: ['websocket']});
 
@@ -42,13 +43,13 @@ export const FetchAdressesFromDB = ({selectBlock}) => {
     const [fetchedAddresses, setFetchedAddresses] = useState([]);
     const [pagerCounter, setPagerCounter] = useState(0);
     const [offPrevButton, setOffPrevButton] = useState(true);
-    const [offNextButton, setOffNextButton] = useState(false);
+    const [offNextButton, setOffNextButton] = useState(true);
     const recordsPerPage = 3;
 
     // Fetching addresses onMount
     useEffect(() => {
         service$.getAddresses().then((response) => {
-            setFetchedAddresses(response.data.data);
+            setFetchedAddresses(response.data.data.reverse());
         })
     }, []);
 
@@ -57,21 +58,25 @@ export const FetchAdressesFromDB = ({selectBlock}) => {
         setFetchedAddresses(addresses);
     });
 
-    const resetButtons = () => {
-        setOffNextButton(false);
-        setOffPrevButton(false);
+    const resetButtons = (boolean) => {
+        setOffNextButton(boolean);
+        setOffPrevButton(boolean);
     };
+
+    useEffect(() => {
+        if (fetchedAddresses.length > recordsPerPage) { setOffNextButton(false);}
+    }, [fetchedAddresses]);
 
     const pagerLogic = (e) => {
         if (e.currentTarget.id === "btn-prev") {
-            resetButtons();
+            resetButtons(false);
             setPagerCounter((prev) => prev - recordsPerPage);
             if (pagerCounter <= recordsPerPage) {
                 setOffPrevButton(true);
                 return null;
             }
         } else {
-            resetButtons();
+            resetButtons(false);
             setPagerCounter((prev) => prev + recordsPerPage);
             if (pagerCounter >= fetchedAddresses.length - recordsPerPage * 2) {
                 setOffNextButton(true);
@@ -90,9 +95,11 @@ export const FetchAdressesFromDB = ({selectBlock}) => {
         <Paper id={"fetch-list-container"}>
             <Box px={1} py={3}> {fetchedAddresses.length === 0 ? (<React.Fragment><br/><LinearProgress/>
                     <LinearProgress color="secondary"/><br/></React.Fragment>) :
+                <React.Fragment>
+                <Typography variant={"h6"} color={"textSecondary"} align={"center"}>Addresses to monitor</Typography>
                 <List>
                     {fetchedAddresses.map((el, key) => {
-                            if ((key < pagerCounter || key >= recordsPerPage + pagerCounter)) return;
+                            if ((key < pagerCounter || key >= recordsPerPage + pagerCounter)) return null;
 
                             return (<ListItem key={key}>
                                 <ListItemIcon>
@@ -110,7 +117,7 @@ export const FetchAdressesFromDB = ({selectBlock}) => {
                             </ListItem>)
                         }
                     )}
-                </List>}
+                </List></React.Fragment>}
             </Box>
             <ButtonGroup
                 fullWidth

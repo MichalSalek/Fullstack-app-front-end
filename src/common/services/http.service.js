@@ -6,8 +6,15 @@ import {env} from '../environment/environment'
 export class HttpService {
 
     config = {
-        headers: {'Access-Control-Allow-Origin': 'Origin, X-Requested-With, Content-Type, Accept'}
+        headers: {'Access-Control-Allow-Origin': 'Origin, X-Requested-With, Content-Type, Accept, true'}
     };
+
+    getNewBlocksFromAPI() {
+        return axios(env.apiBlockChain + "/blocks/?format=json", {
+            method: 'GET',
+            params: {cors: true}
+        })
+    }
 
     getAddresses() {
         return axios(env.apiUrl + "/addresses", {
