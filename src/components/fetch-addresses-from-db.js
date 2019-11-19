@@ -36,13 +36,13 @@ const useStyles1 = makeStyles(theme => ({
     }
 }));
 
-export const FetchAdressesFromDB = () => {
+export const FetchAdressesFromDB = ({selectBlock}) => {
     const classes = useStyles1();
     const [fetchedAddresses, setFetchedAddresses] = useState([]);
     const [pagerCounter, setPagerCounter] = useState(0);
     const [offPrevButton, setOffPrevButton] = useState(true);
     const [offNextButton, setOffNextButton] = useState(false);
-
+    const recordsPerPage = 3;
 
     // Fetching addresses onMount
     useEffect(() => {
@@ -64,27 +64,31 @@ export const FetchAdressesFromDB = () => {
     const pagerLogic = (e) => {
         if (e.currentTarget.id === "btn-prev") {
             resetButtons();
-            setPagerCounter((prev) => prev - 5);
-            if (pagerCounter <= 5) {
+            setPagerCounter((prev) => prev - recordsPerPage);
+            if (pagerCounter <= recordsPerPage) {
                 setOffPrevButton(true);
                 return null;
             }
         } else {
             resetButtons();
-            setPagerCounter((prev) => prev + 5);
-            if (pagerCounter >= fetchedAddresses.length - 10) {
+            setPagerCounter((prev) => prev + recordsPerPage);
+            if (pagerCounter >= fetchedAddresses.length - recordsPerPage * 2) {
                 setOffNextButton(true);
                 return null;
             }
         }
     };
 
+    const sendSelectedBlock = (e) => {
+        selectBlock(e.currentTarget.childNodes[0].innerText);
+    };
+
     return (<React.Fragment>
-        <Paper>
+        <Paper id={"fetch-list-container"}>
             <Box px={1} py={3}> {fetchedAddresses.length === 0 ? "fetching..." :
                 <List>
                     {fetchedAddresses.map((el, key) => {
-                            if ((key < pagerCounter || key >= 5 + pagerCounter)) return;
+                            if ((key < pagerCounter || key >= recordsPerPage + pagerCounter)) return;
 
                             return (<ListItem key={key}>
                                 <ListItemIcon>
@@ -92,7 +96,7 @@ export const FetchAdressesFromDB = () => {
                                         <MonetizationOnIcon
                                             className={classes.coinIcon}/></React.Fragment>
                                 </ListItemIcon>
-                                <Button variant="contained" color="primary">
+                                <Button fullWidth variant="outlined" onClick={sendSelectedBlock} color="primary">
                                     <ListItemText
                                         className={classes.stringWrap}
                                         primary={el.addresses_paths}
@@ -107,6 +111,7 @@ export const FetchAdressesFromDB = () => {
                 fullWidth
                 color="primary"
                 size="medium"
+                variant="text"
                 aria-label="large outlined secondary button group"
             >
                 <Button id={"btn-prev"} disabled={offPrevButton} onClick={(e) => pagerLogic(e)}>Previous 5</Button>

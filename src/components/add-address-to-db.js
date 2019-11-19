@@ -67,7 +67,8 @@ export const AddAddressToDB = () => {
 
     return (<React.Fragment>
         <Paper><Box px={2} py={3}>
-            <Typography variant={"h5"} component={"h3"} align={"center"}>Add new address</Typography>
+            <Typography variant={"h5"} component={"h3"} color={"textPrimary"} align={"center"}>Add new
+                address</Typography>
             <article className={classes.root}>
                 <MonetizationOnOutlinedIcon/>
                 <TextField className={classes.leftSpacing} id="add-address" label="Add new bitcoin address here"
