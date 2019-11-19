@@ -15,6 +15,7 @@ import ListItemText from "@material-ui/core/ListItemText";
 import {makeStyles} from "@material-ui/core";
 import Button from "@material-ui/core/Button";
 import ButtonGroup from "@material-ui/core/ButtonGroup";
+import LinearProgress from "@material-ui/core/LinearProgress";
 
 const socket = io(env.apiUrl, {transports: ['websocket']});
 
@@ -80,12 +81,15 @@ export const FetchAdressesFromDB = ({selectBlock}) => {
     };
 
     const sendSelectedBlock = (e) => {
-        selectBlock(e.currentTarget.childNodes[0].innerText);
+        const indexOfBlockOnList = e.currentTarget.id;
+        const blockAddress = e.currentTarget.childNodes[0].innerText;
+        selectBlock(`[ ${indexOfBlockOnList} ] - ${blockAddress}`);
     };
 
     return (<React.Fragment>
         <Paper id={"fetch-list-container"}>
-            <Box px={1} py={3}> {fetchedAddresses.length === 0 ? "fetching..." :
+            <Box px={1} py={3}> {fetchedAddresses.length === 0 ? (<React.Fragment><br/><LinearProgress/>
+                    <LinearProgress color="secondary"/><br/></React.Fragment>) :
                 <List>
                     {fetchedAddresses.map((el, key) => {
                             if ((key < pagerCounter || key >= recordsPerPage + pagerCounter)) return;
@@ -96,7 +100,8 @@ export const FetchAdressesFromDB = ({selectBlock}) => {
                                         <MonetizationOnIcon
                                             className={classes.coinIcon}/></React.Fragment>
                                 </ListItemIcon>
-                                <Button fullWidth variant="outlined" onClick={sendSelectedBlock} color="primary">
+                                <Button fullWidth variant="outlined" onClick={sendSelectedBlock} id={key + 1}
+                                        color="primary">
                                     <ListItemText
                                         className={classes.stringWrap}
                                         primary={el.addresses_paths}

@@ -16,6 +16,7 @@ import {makeStyles} from "@material-ui/core";
 import Button from "@material-ui/core/Button";
 import ButtonGroup from "@material-ui/core/ButtonGroup";
 import Typography from "@material-ui/core/Typography";
+import Chip from "@material-ui/core/Chip";
 
 const socket = io(env.apiUrl, {transports: ['websocket']});
 
@@ -35,12 +36,16 @@ export const MonitorSection = ({selectedBlock}) => {
         setFetchedAddresses(addresses);
     });
 
-    if (!selectedBlock) return null;
-    return (<React.Fragment>
+
+    return selectedBlock && (<React.Fragment>
         <Paper>
             <Box px={4} py={3}>
                 <Typography variant={"h5"} component={"h3"} color={"textPrimary"} align={"right"}>Monitor</Typography>
-                Selected block: {selectedBlock}
+                <Chip
+                    avatar={<MonetizationOnIcon />}
+                    label={selectedBlock}
+                    color="primary"
+                />
             </Box>
 
         </Paper>
